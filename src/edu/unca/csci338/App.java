@@ -37,7 +37,7 @@ public class App {
 				if (label1.getText().equals("LOL. I changed.")) {
 					label1.setText("STOP CHANGING ME!");
 				} else {
-					label1.setText("LOL. I changed  again.");
+					label1.setText("LOL. I changed.");
 				}
 			}
 		});
