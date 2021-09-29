@@ -15,6 +15,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
+import edu.unca.csci338.controller.ColorController;
+
 public class App {
 	File wavFile;
     static URL defaultSound;
@@ -57,20 +59,10 @@ public class App {
 		JButton text = new JButton("Change Text");
 
 		red.setBounds(140, 50, 120, 30);
-		red.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				f.getContentPane().setBackground(Color.RED);
-				play();
-			}
-		});
+		red.addActionListener(new ColorController(f, Color.RED));
 
 		green.setBounds(140, 100, 120, 30);
-		green.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				f.getContentPane().setBackground(Color.GREEN);
-				play();
-			}
-		});
+		green.addActionListener(new ColorController(f, Color.GREEN));
 
 		text.setBounds(140, 150, 120, 30);
 		text.addActionListener(new ActionListener() {
