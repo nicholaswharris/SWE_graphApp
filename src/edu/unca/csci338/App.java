@@ -16,33 +16,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
 import edu.unca.csci338.controller.ColorController;
+import edu.unca.csci338.controller.AudioController;
 
 public class App {
-	File wavFile;
-    static URL defaultSound;
-    public static Clip clip;
-    public static AudioInputStream audioInputStream;
-	public static void play() {
-		try {
-            audioInputStream = AudioSystem.getAudioInputStream(defaultSound);
-
-            try {
-                clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.loop(20000);
-                clip.start();
-                try{
-                	Thread.sleep(1000);
-                }catch(InterruptedException l) {
-                	System.out.println("You done it wrong");
-                }
-                clip.stop();
-            } catch (LineUnavailableException e) {
-            }
-
-        } catch (UnsupportedAudioFileException | IOException e) {
-        }
-	}
 
 	public static void main(String[] args) {
 		JFrame f = new JFrame("CSCI338 Graphical Application");
@@ -50,19 +26,17 @@ public class App {
 		f.getContentPane().setBackground(Color.YELLOW);
 		JLabel label1 = new JLabel("I'll never change.");
 		label1.setBounds(150, 200, 200, 20);
-		try {defaultSound = new URL ("https://www.soundjay.com/human/fart-01.wav");}
-		catch (MalformedURLException ex) {
-            System.out.println("Fart no workie.");
-        }
 		JButton red = new JButton("Make Red");
 		JButton green = new JButton("Make Green");
 		JButton text = new JButton("Change Text");
 
 		red.setBounds(140, 50, 120, 30);
 		red.addActionListener(new ColorController(f, Color.RED));
+		red.addActionListener(new AudioController());
 
 		green.setBounds(140, 100, 120, 30);
 		green.addActionListener(new ColorController(f, Color.GREEN));
+		green.addActionListener(new AudioController());
 
 		text.setBounds(140, 150, 120, 30);
 		text.addActionListener(new ActionListener() {
