@@ -1,11 +1,9 @@
 package edu.unca.csci338;
 
-import java.applet.*;
 import java.awt.Color;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.System.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
@@ -17,61 +15,53 @@ import javax.swing.*;
 
 public class App {
 	File wavFile;
-    static URL defaultSound;
-    public static Clip clip;
-    public static AudioInputStream audioInputStream;
-	public static void play() {
+	static URL defaultSound;
+	public static Clip clip;
+	public static AudioInputStream audioInputStream;
+	static AudioController audio;
+	static ColorController color;
+
+	public static JFrame createFrame() {
+		JFrame frame = new JFrame("CSCI338 Graphical Application");
+		frame.setSize(400, 350);
+		frame.setLayout(null);
+		frame.setVisible(true);
 		try {
-            audioInputStream = AudioSystem.getAudioInputStream(defaultSound);
-
-            try {
-                clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.loop(20000);
-                clip.start();
-                try{
-                	Thread.sleep(1000);
-                }catch(InterruptedException l) {
-                	System.out.println("You done it wrong");
-                }
-                clip.stop();
-            } catch (LineUnavailableException e) {
-            }
-
-        } catch (UnsupportedAudioFileException | IOException e) {
-        }
+			audio = new AudioController("http://www.gros-prout.fr/son/triple.wav");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return frame;
 	}
 
-	public static void main(String[] args) {
-		JFrame f = new JFrame("CSCI338 Graphical Application");
-
-		f.getContentPane().setBackground(Color.YELLOW);
-		JLabel label1 = new JLabel("I'll never change.");
-		label1.setBounds(150, 200, 200, 20);
-		try {defaultSound = new URL ("https://www.soundjay.com/human/fart-01.wav");}
-		catch (MalformedURLException ex) {
-            System.out.println("Fart no workie.");
-        }
+	public static JButton createRed(JFrame frame) {
 		JButton red = new JButton("Make Red");
-		JButton green = new JButton("Make Green");
-		JButton text = new JButton("Change Text");
-
 		red.setBounds(140, 50, 120, 30);
 		red.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.getContentPane().setBackground(Color.RED);
-				play();
+				frame.getContentPane().setBackground(Color.RED);
+				audio.actionPerformed(null);
 			}
 		});
+		return red;
+	}
 
+	public static JButton createGreen(JFrame frame) {
+		JButton green = new JButton("Make Green");
 		green.setBounds(140, 100, 120, 30);
 		green.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.getContentPane().setBackground(Color.GREEN);
-				play();
+				frame.getContentPane().setBackground(Color.GREEN);
+				audio.actionPerformed(null);
 			}
 		});
+		return green;
+	}
 
+	public static JButton createText(JFrame frame) {
+		JButton text = new JButton("Change Text");
+		JLabel label1 = new JLabel("I'll never change.");
+		label1.setBounds(150, 200, 200, 20);
 		text.setBounds(140, 150, 120, 30);
 		text.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -80,16 +70,25 @@ public class App {
 				} else {
 					label1.setText("LOL. I changed.");
 				}
+				audio.actionPerformed(null);
 			}
 		});
+		frame.add(label1);
+		return text;
+	}
+
+	public static void main(String[] args) {
+		JFrame f = createFrame();
+		
+		color = new ColorController(f, Color.YELLOW);
+		color.actionPerformed(null);
+
+		JButton red = createRed(f);
+		JButton green = createGreen(f);
+		JButton text = createText(f);
 
 		f.add(red);
 		f.add(green);
 		f.add(text);
-		f.add(label1);
-
-		f.setSize(400, 350);
-		f.setLayout(null);
-		f.setVisible(true);
 	}
 }
