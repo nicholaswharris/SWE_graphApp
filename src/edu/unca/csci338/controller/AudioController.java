@@ -3,8 +3,6 @@ package edu.unca.csci338.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -12,58 +10,71 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import edu.unca.csci338.model.AudioModel;
+
 public class AudioController implements ActionListener
 {
-	private static URL defaultSound = null;
-	private URL soundUrl;
-	private Clip clip;
-	private AudioInputStream audioInputStream;
+	private AudioModel model;
+	private AudioPlaybackThread playbackThread;
 	
-	static {
-		try {defaultSound = new URL ("https://www.soundjay.com/human/fart-01.wav");}
-		catch (MalformedURLException ex) {
-            System.out.println("Fart no workie.");
-        }
-	}
-	
-	public AudioController()
+	public AudioController(AudioModel model)
 	{
-		this(AudioController.defaultSound);
-	}
-	
-	public AudioController(String urlPath) throws MalformedURLException
-	{
-		this(new URL(urlPath));
-	}
-	
-	public AudioController(URL url)
-	{
-		super();
-		this.soundUrl = url;
+		this.model = model;
+		this.playbackThread = null;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
 		try {
-            audioInputStream = AudioSystem.getAudioInputStream(this.soundUrl);
+			this.play(this.model.getAudio());
+		} catch (UnsupportedAudioFileException| IOException e) {
+			System.out.println("Audio Error: Line Exception");
+		} catch (LineUnavailableException e) {
+			System.out.println("Audio Error: Unsupported Audio File/IO Exception");
+		}
+	}
 
-            try {
-                clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.loop(20000);
-                clip.start();
-                try{
-                	Thread.sleep(1000);
-                }catch(InterruptedException l) {
-                	System.out.println("You done it wrong");
-                }
-                clip.stop();
-            } catch (LineUnavailableException e) {
-            }
+	public void play(AudioInputStream audioStream) throws IOException, LineUnavailableException
+	{
+		if (this.playbackThread != null) {
+			this.playbackThread.interrupt();
+			try {
+				this.playbackThread.join();
+			} catch (InterruptedException e) {
+				System.out.println("Audio Error: Interrupted Exception");
+			}
+		}
+		Clip clip = AudioSystem.getClip();
+		clip.open(audioStream);
+		this.playbackThread = new AudioPlaybackThread(clip);
+		playbackThread.start();
+	}
+}
 
-        } catch (UnsupportedAudioFileException | IOException e) {
-        }
+class AudioPlaybackThread extends Thread
+{
+	private Clip clip;
+
+	public AudioPlaybackThread(Clip clip)
+	{
+		this.clip = clip;
+		this.setDaemon(false);
+	}
+
+	@Override
+	public void run()
+	{
+		clip.start();
+		try {
+			synchronized (clip) {
+				clip.wait();
+			}
+		}
+		catch (InterruptedException err) {
+			clip.flush();
+		}
+		clip.stop();
 	}
 
 }
