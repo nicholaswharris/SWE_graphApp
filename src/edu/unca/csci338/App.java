@@ -16,6 +16,7 @@ public class App {
 	public static AudioInputStream audioInputStream;
 	static AudioController audio;
 	static ColorController color;
+	static ColorModel colorModel;
 
 	public static JFrame createFrame() {
 		JFrame frame = new JFrame("CSCI338 Graphical Application");
@@ -27,7 +28,8 @@ public class App {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		color = new ColorController(frame, Color.YELLOW);
+		colorModel = new ColorModel(Color.YELLOW);
+		color = new ColorController(colorModel, frame, colorModel.getColor());
 		color.actionPerformed(null);
 		return frame;
 	}
@@ -37,7 +39,7 @@ public class App {
 		red.setBounds(140, 50, 120, 30);
 		red.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				color = new ColorController(frame, Color.RED);
+				colorModel.setColor(Color.RED);
 				color.actionPerformed(null);
 				audio.actionPerformed(null);
 			}
@@ -50,7 +52,7 @@ public class App {
 		green.setBounds(140, 100, 120, 30);
 		green.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				color = new ColorController(frame, Color.GREEN);
+				colorModel.setColor(Color.GREEN);
 				color.actionPerformed(null);
 				audio.actionPerformed(null);
 			}
@@ -63,7 +65,7 @@ public class App {
 		blue.setBounds(140, 150, 120, 30);
 		blue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				color = new ColorController(frame, Color.BLUE);
+				colorModel.setColor(Color.BLUE);
 				color.actionPerformed(null);
 				audio.actionPerformed(null);
 			}
