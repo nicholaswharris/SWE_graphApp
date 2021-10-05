@@ -9,6 +9,9 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 
+import edu.unca.csci338.controller.ColorController;
+import edu.unca.csci338.controller.AudioController;
+
 public class App {
 	File wavFile;
 	static URL defaultSound;

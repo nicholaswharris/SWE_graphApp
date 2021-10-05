@@ -1,10 +1,12 @@
-package edu.unca.csci338;
+package edu.unca.csci338.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JFrame;
+
+import edu.unca.csci338.ColorModel;
 
 public class ColorController implements ActionListener {
 	private Container pane;
