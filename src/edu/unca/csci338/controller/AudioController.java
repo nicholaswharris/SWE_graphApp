@@ -7,6 +7,8 @@ import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -52,13 +54,14 @@ public class AudioController implements ActionListener
 	}
 }
 
-class AudioPlaybackThread extends Thread
+class AudioPlaybackThread extends Thread implements LineListener
 {
 	private Clip clip;
 
 	public AudioPlaybackThread(Clip clip)
 	{
 		this.clip = clip;
+		this.clip.addLineListener(this);
 		this.setDaemon(false);
 	}
 
@@ -68,13 +71,21 @@ class AudioPlaybackThread extends Thread
 		clip.start();
 		try {
 			synchronized (clip) {
-				clip.wait();
+				clip.wait(5000);
 			}
 		}
 		catch (InterruptedException err) {
-			clip.flush();
+			clip.stop();
 		}
-		clip.stop();
+		clip.close();
+	}
+
+	@Override
+	public void update(LineEvent event)
+	{
+		if (event.getType().equals(LineEvent.Type.STOP) || event.getType().equals(LineEvent.Type.CLOSE)) {
+			this.interrupt();
+		}
 	}
 
 }

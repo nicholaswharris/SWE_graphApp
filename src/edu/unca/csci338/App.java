@@ -22,6 +22,7 @@ public class App {
 
 	public static JFrame createFrame() {
 		JFrame frame = new JFrame("CSCI338 Graphical Application");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(400, 280);
 		frame.setLayout(null);
 		try {
