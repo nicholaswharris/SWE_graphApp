@@ -3,14 +3,10 @@ package edu.unca.csci338;
 import java.awt.Color;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
 public class App {
@@ -23,7 +19,7 @@ public class App {
 
 	public static JFrame createFrame() {
 		JFrame frame = new JFrame("CSCI338 Graphical Application");
-		frame.setSize(400, 350);
+		frame.setSize(400, 280);
 		frame.setLayout(null);
 		frame.setVisible(true);
 		try {
@@ -31,6 +27,8 @@ public class App {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		color = new ColorController(frame, Color.YELLOW);
+		color.actionPerformed(null);
 		return frame;
 	}
 
@@ -39,7 +37,8 @@ public class App {
 		red.setBounds(140, 50, 120, 30);
 		red.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.getContentPane().setBackground(Color.RED);
+				color = new ColorController(frame, Color.RED);
+				color.actionPerformed(null);
 				audio.actionPerformed(null);
 			}
 		});
@@ -51,44 +50,31 @@ public class App {
 		green.setBounds(140, 100, 120, 30);
 		green.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.getContentPane().setBackground(Color.GREEN);
+				color = new ColorController(frame, Color.GREEN);
+				color.actionPerformed(null);
 				audio.actionPerformed(null);
 			}
 		});
 		return green;
 	}
-
-	public static JButton createText(JFrame frame) {
-		JButton text = new JButton("Change Text");
-		JLabel label1 = new JLabel("I'll never change.");
-		label1.setBounds(150, 200, 200, 20);
-		text.setBounds(140, 150, 120, 30);
-		text.addActionListener(new ActionListener() {
+	
+	public static JButton createBlue(JFrame frame) {
+		JButton blue = new JButton("Make Blue");
+		blue.setBounds(140, 150, 120, 30);
+		blue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (label1.getText().equals("LOL. I changed.")) {
-					label1.setText("STOP CHANGING ME!");
-				} else {
-					label1.setText("LOL. I changed.");
-				}
+				color = new ColorController(frame, Color.BLUE);
+				color.actionPerformed(null);
 				audio.actionPerformed(null);
 			}
 		});
-		frame.add(label1);
-		return text;
+		return blue;
 	}
 
 	public static void main(String[] args) {
 		JFrame f = createFrame();
-		
-		color = new ColorController(f, Color.YELLOW);
-		color.actionPerformed(null);
-
-		JButton red = createRed(f);
-		JButton green = createGreen(f);
-		JButton text = createText(f);
-
-		f.add(red);
-		f.add(green);
-		f.add(text);
+		f.add(createRed(f));
+		f.add(createGreen(f));
+		f.add(createBlue(f));
 	}
 }

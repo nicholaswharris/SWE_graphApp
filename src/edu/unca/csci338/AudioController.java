@@ -43,15 +43,14 @@ public class AudioController implements ActionListener {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException l) {
-					System.out.println("You done it wrong");
+					System.out.println("Audio Error: Interrupted Exception");
 				}
 			} catch (LineUnavailableException e) {
-				System.out.println("FAILED Line Exception");
+				System.out.println("Audio Error: Line Exception");
 
 			}
 		} catch (UnsupportedAudioFileException | IOException e) {
-			System.out.println("FAILED");
+			System.out.println("Audio Error: Unsupported Audio File/IO Exception");
 		}
 	}
-
 }
